@@ -5,7 +5,6 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 export default class Post extends Component {
   constructor (props) {
     super(props)
-    console.log(props)
     let date = new Date(props.created_at)
     let visualDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
 
