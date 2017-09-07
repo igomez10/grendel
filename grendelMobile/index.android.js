@@ -71,7 +71,6 @@ export default class GrendelMobile extends Component {
   }
 
   async onPost () {
-    console.log(this.state)
     await fetch(URL + '/post/' + btoa(this.state.newPost), {
       method: 'POST'
     })

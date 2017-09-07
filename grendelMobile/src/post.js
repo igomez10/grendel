@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default class Post extends Component {
   constructor (props) {
@@ -17,6 +17,7 @@ export default class Post extends Component {
       score: props.score
     }
   }
+  
   render () {
     return (
       <View style={styles.container}>
@@ -24,9 +25,25 @@ export default class Post extends Component {
           <Text style={styles.scoreText}>{this.state.score}</Text>
           <Text style={styles.postText}>{this.state.content}</Text>
           <Text style={styles.createdAtText}>{this.state.createdAt}</Text>
+          <TouchableOpacity
+            style={styles.greenButton}
+          >
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.redButton}
+          >
+            <Text style={styles.redButtonText}>-</Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
+  }
+
+  async onUpvote () {
+    await fetch(URL + '/vote/' + this.state.id + '/upvote', {
+      method: 'POST'
+    })
   }
 }
 
@@ -51,6 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#00FF7F'
   },
   greenButtonText: {
+    color: '#ffffff'
+  }
+  redButton: {
+    backgroundColor: '#ff2e2e'
+  },
+  redButtonText: {
     color: '#ffffff'
   }
 })
