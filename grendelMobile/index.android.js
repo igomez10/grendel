@@ -1,47 +1,117 @@
+/* global fetch, btoa */
 
-import React, { Component } from 'react'
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import React, {Component} from 'react'
+import {AppRegistry, StyleSheet, Text, View, ListView, TextInput, TouchableOpacity} from 'react-native'
+
+import Post from './src/post'
+
+const URL = 'http://192.168.100.112:4444'
 
 export default class GrendelMobile extends Component {
+  constructor () {
+    super()
+    let ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    })
+    let posts = ds.cloneWithRows([])
+    this.state = {
+      newPost: '',
+      posts: posts
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
+        <Text style={styles.title}>
+          GRENDEL
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+        <View style={styles.newPost}>
+          <TextInput
+            onChangeText={(text) => this.setState({newPost: text})}
+            placeholder='Nuevo Post'
+            returnKeyType='go'
+            style={styles.newPostInput}
+          />
+          <TouchableOpacity
+            style={styles.newPostButton}
+            onPress={this.onPost.bind(this)}
+          >
+            <Text style={styles.newPostButtonText}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.posts}>
+          <ListView
+            enableEmptySections
+            dataSource={this.state.posts}
+            renderRow={(rowData) => <Post url={URL} {...rowData} />}
+            renderSeparator={(sectionId, rowId) => <View style={styles.separator} />}
+          />
+        </View>
       </View>
     )
+  }
+
+  async componentDidMount () {
+    try {
+      let request = await fetch(URL + '/posts')
+      if (request.status >= 200 && request.status < 300) {
+        let posts = await request.json()
+        let ds = new ListView.DataSource({
+          rowHasChanged: (r1, r2) => r1 !== r2
+        })
+        this.setState({posts: ds.cloneWithRows(posts)})
+      } else {
+        let error = await request.text()
+        console.log('Error 2', error)
+      }
+    } catch (e) {
+      console.log('Error 1', e)
+    }
+  }
+
+  async onPost () {
+    console.log(this.state)
+    await fetch(URL + '/post/' + btoa(this.state.newPost), {
+      method: 'POST'
+    })
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    paddingTop: 20,
+    paddingHorizontal: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    backgroundColor: '#8b4b68'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
+  title: {
+    fontSize: 28,
+    alignItems: 'center'
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
+  newPost: {
+    backgroundColor: '#ffffff',
+    paddingTop: 10
+  },
+  newPostInput: {
+
+  },
+  newPostButton: {
+    backgroundColor: '#000000'
+  },
+  newPostButtonText: {
+    color: '#ffffff'
+  },
+  posts: {
+    paddingTop: 10,
+    height: 300
+  },
+  separator: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#50777c'
   }
 })
 
