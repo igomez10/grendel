@@ -81,32 +81,37 @@ export default class GrendelMobile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingVertical: 20,
     paddingHorizontal: 10,
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     backgroundColor: '#8b4b68'
   },
   title: {
-    fontSize: 28,
-    alignItems: 'center'
+    flex: 1,
+    fontSize: 36,
+    textAlign: 'center'
   },
   newPost: {
+    flex: 1,
     backgroundColor: '#ffffff',
     paddingTop: 10
   },
   newPostInput: {
-
+    flex: 2,
+    textAlign: 'center'
   },
   newPostButton: {
+    flex: 2,
     backgroundColor: '#000000'
   },
   newPostButtonText: {
-    color: '#ffffff'
+    color: '#ffffff',
+    textAlign: 'center'
   },
   posts: {
-    paddingTop: 10,
-    height: 300
+    flex: 5,
+    paddingTop: 10
   },
   separator: {
     flex: 1,
