@@ -17,7 +17,7 @@ export default class Post extends Component {
       score: props.score
     }
   }
-  
+
   render () {
     return (
       <View style={styles.container}>
@@ -25,23 +25,34 @@ export default class Post extends Component {
           <Text style={styles.scoreText}>{this.state.score}</Text>
           <Text style={styles.postText}>{this.state.content}</Text>
           <Text style={styles.createdAtText}>{this.state.createdAt}</Text>
+        </View>
+        <View style={styles.buttons}>
           <TouchableOpacity
             style={styles.greenButton}
-          >
-            <Text style={styles.buttonText}>+</Text>
+            onPress={this.onUpvote.bind(this)}
+        >
+            <Text style={styles.greenButtonText}>+</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.redButton}
-          >
+            onPress={this.onDownvote.bind(this)}
+        >
             <Text style={styles.redButtonText}>-</Text>
           </TouchableOpacity>
+
         </View>
       </View>
     )
   }
 
   async onUpvote () {
-    await fetch(URL + '/vote/' + this.state.id + '/upvote', {
+    await fetch(this.state.url + '/vote/' + this.state.id + '/upvote', {
+      method: 'POST'
+    })
+  }
+
+  async onDownvote () {
+    await fetch(this.state.url + '/vote/' + this.state.id + '/downvote', {
       method: 'POST'
     })
   }
@@ -64,16 +75,24 @@ const styles = StyleSheet.create({
   createdAtText: {
     color: '#5a9089'
   },
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'stretch'
+  },
   greenButton: {
+    flex: 1,
     backgroundColor: '#00FF7F'
   },
   greenButtonText: {
-    color: '#ffffff'
-  }
+    color: '#ffffff',
+        textAlign: 'center'
+  },
   redButton: {
+    flex: 1,
     backgroundColor: '#ff2e2e'
   },
   redButtonText: {
-    color: '#ffffff'
+    color: '#ffffff',
+        textAlign: 'center'
   }
 })
